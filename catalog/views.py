@@ -109,34 +109,6 @@ def renew_book_librarian(request, pk):
 
     return render(request, 'catalog/book_renew_librarian.html', {'form': form, 'bookinst':book_inst})
 
-from .forms import AddBookInstanceForm
-
-@permission_required('catalog.can_mark_returned')
-def BookInstCreate(request, pk):
-    """
-    View function for renewing a specific BookInstance by librarian
-    """
-    book_inst=get_object_or_404(BookInstance, pk = pk)
-    form = AddBookInstanceForm(request.POST)
-    # If this is a POST request then process the Form data
-    if request.method == 'POST':
-
-        # Create a form instance and populate it with data from the request (binding):
-        form = AddBookInstanceForm(request.POST)
-
-        # Check if the form is valid:
-        if form.is_valid():
-            # process the data in form.cleaned_data as required (here we just write it to the model due_back field)
-            book_inst.imprint = form.cleaned_data['imprint']
-            book_inst.save()
-    # If this is a GET (or any other method) create the default form.
-        else:
-            proposed_Imprint = 1
-            form = AddBookInstanceForm (initial={'imprint': proposed_Imprint,})
-            # redirect to a new URL:
-            return HttpResponseRedirect(reverse('author-detail') )
-
-    return render(request, 'catalog/BookInstCreate.html', {'form': form, 'bookinst':book_inst})
 
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.urls import reverse_lazy
